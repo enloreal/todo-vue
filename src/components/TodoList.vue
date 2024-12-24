@@ -123,12 +123,24 @@ const checkTodo = async (documentId:string, completed: boolean) => {
   }
 }
 
-const checkAll = () => {
+const checkAll = async () => {
   todos.value = todos.value.map((todo) => ({
     ...todo,
     completed: true,
   }));
-}
+
+  for (const todo of todos.value) {
+    try {
+      await axios.put(`${URL}/${todo.documentId}`, {
+        data: {
+          completed: true,
+        },
+      });
+    } catch (error) {
+      console.error(`Ошибка при обновлении задачи ${todo.documentId}:`, error);
+    }
+  }
+};
 
 </script>
 
